@@ -37,6 +37,7 @@ function showStock() {
         if (err) throw err;
         var iChoices = [];
         console.log("Below is a list of our Inventory:");
+        // console.log(res);
 
         for (var i = 0; i < res.length; i++) {
             var id = res[i].item_id;
@@ -49,17 +50,20 @@ function showStock() {
         console.log(divider);
         // This is breaking everything :(
         // connection.end();
+        console.log(iChoices)
         placeOrder(iChoices);
     });
 }
 
 function placeOrder(choice) {
-    inquirer.prompt([{
+    inquirer.prompt(
+        [{
         type: "list",
         message: "Which product would you like to purchase?",
         choices: choice,
         name: "choice"
-    }]).then(function (res) {
+    }]
+).then(function (res) {
 
         var choice = res.choice.split(" - ", 2);
         var id = choice[0];
@@ -129,9 +133,7 @@ function checkOrder(id, rQuant, aQuant) {
 function UpdateInventory(id, aQuant) {
     // The right way to do this is to get the value and update the total. This prevents very slow race conditions....The lazy way is to just pass in the new value...which is what im doing.
     var query = connection.query(
-        "UPDATE products SET ? WHERE ?", 
-        [
-            {
+        "UPDATE products SET ? WHERE ?", [{
                 stock_quantity: aQuant
             },
             {
@@ -142,6 +144,4 @@ function UpdateInventory(id, aQuant) {
             if (err) throw err;
         }
     );
-
-
 }
