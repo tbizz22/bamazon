@@ -53,10 +53,10 @@ function showManagerMenu() {
         }]
     ).then(function (res) {
         if (res.choice === "View Products for Sale") {
-            showStock();
+            showStock()
 
         } else if (res.choice === "View Low Inventory") {
-            lowInventory();
+            console.log(res);
 
         } else if (res.choice === "Add to Inventory") {
             console.log(res);
@@ -88,5 +88,12 @@ function showStock() {
 
 
 function lowInventory() {
-
+    var query = connection.query(
+        "SELECT * FROM products WHERE ?", {
+            stock_quantity: < 5
+        },
+        function(err, res) {
+            console.log(res);
+        }
+    )
 }
