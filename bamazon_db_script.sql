@@ -6,7 +6,7 @@ CREATE TABLE products (
 	item_id INT NOT NULL AUTO_INCREMENT,
     product_name VARCHAR(50) NULL,
     department_name VARCHAR(50) NULL,
-    price INT NULL,
+    price DECIMAL(10,4) NULL,
     stock_quantity INT NULL,    
     PRIMARY KEY (item_id)
 );
@@ -21,6 +21,6 @@ Values  ("AUKEY Car Phone Mount", "Mobile Accessories", 3.99, 100),
         ("Fallout 76", "Video Games", 59.99, 100),
         ("Far Cry 5", "Video Games", 59.99, 100),
         ("SpiderMan", "Video Games", 59.99, 100),
-        ("Titanfall 2", "Video Games", 59.99, 100)
+        ("Titanfall 2", "Video Games", 59.99, 100);
         
 

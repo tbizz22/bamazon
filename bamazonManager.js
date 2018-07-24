@@ -5,6 +5,7 @@
 // get the libraries
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+const cTable = require('console.table');
 
 
 // connection Data
@@ -52,10 +53,10 @@ function showManagerMenu() {
         }]
     ).then(function (res) {
         if (res.choice === "View Products for Sale") {
-            showStock()
+            showStock();
 
         } else if (res.choice === "View Low Inventory") {
-            console.log(res);
+            lowInventory();
 
         } else if (res.choice === "Add to Inventory") {
             console.log(res);
@@ -79,9 +80,13 @@ function greetManager() {
 function showStock() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        var iChoices = [];
-        console.log("Below is a list of our Inventory:");
-        console.log(res);
-
+        
+        console.log(divider + "Below is a list of our Inventory:\n");
+        console.table(res);
     });
+}
+
+
+function lowInventory() {
+
 }
