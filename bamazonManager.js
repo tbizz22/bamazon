@@ -29,7 +29,7 @@ var ProductGrid = function (id, name, dept, stock, price) {
     this.dept = dept;
 }
 
-
+// this starts the flow through the app
 openConnection();
 
 function openConnection() {
@@ -122,10 +122,12 @@ function updateStock() {
                 if (err) throw err;
                 currStock = res[0].stock_quantity;
                 console.table(res);
+                
                 inquirer.prompt([{
                     type: "input",
                     message: "How many many would you like to order?",
                     name: "count"
+               
                 }]).then(function (res) {
                     currStock = parseInt(currStock) + parseInt(res.count);
                     UpdateInventory(item, currStock)
@@ -185,6 +187,7 @@ function createProduct() {
             })
         })
 }
+
 
 function addProductToDB(product) {
     console.log("Inserting a new product...\n");
