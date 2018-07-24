@@ -56,7 +56,7 @@ function showManagerMenu() {
             showStock()
 
         } else if (res.choice === "View Low Inventory") {
-            console.log(res);
+            lowInventory();
 
         } else if (res.choice === "Add to Inventory") {
             console.log(res);
@@ -89,11 +89,9 @@ function showStock() {
 
 function lowInventory() {
     var query = connection.query(
-        "SELECT * FROM products WHERE ?", {
-            stock_quantity: < 5
-        },
+        "SELECT * FROM products WHERE stock_quantity < 5",
         function(err, res) {
-            console.log(res);
+            console.table(res);
         }
-    )
+    );
 }
