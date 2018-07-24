@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
     host: "localhost",
     port: 4000,
     user: "root",
-    password: "Lost4566!",
+    password: "Root!",
     database: "bamazon_db"
 });
 
@@ -37,7 +37,7 @@ function showStock() {
         if (err) throw err;
         var iChoices = [];
         console.log("Below is a list of our Inventory:");
-        // console.log(res);
+        
 
         for (var i = 0; i < res.length; i++) {
             var id = res[i].item_id;
@@ -49,8 +49,7 @@ function showStock() {
         }
         console.log(divider);
         // This is breaking everything :(
-        // connection.end();
-        console.log(iChoices)
+        // connection.end();        
         placeOrder(iChoices);
     });
 }
@@ -126,6 +125,8 @@ function checkOrder(id, rQuant, aQuant) {
         // This can happen async since nothing is getting returned
         UpdateInventory(id, aQuant);
         getPrice(id, rQuant);
+        // reset the experience
+        showStock();
     }
 }
 
