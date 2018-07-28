@@ -89,6 +89,7 @@ function showStock() {
 
         console.log(divider + "Below is a list of our Inventory:\n");
         console.table(res);
+        cont();
     });
 }
 
@@ -98,6 +99,7 @@ function lowInventory() {
         "SELECT * FROM products WHERE stock_quantity < 55",
         function (err, res) {
             console.table(res);
+            cont();
         }
     );
 }
@@ -131,6 +133,7 @@ function updateStock() {
                 }]).then(function (res) {
                     currStock = parseInt(currStock) + parseInt(res.count);
                     UpdateInventory(item, currStock)
+                    cont();
                 })
             })
     })
@@ -184,6 +187,7 @@ function createProduct() {
             ]).then(function (res) {
                 var product = new ProductGrid(id, res.product, res.dept, res.stock, res.price)
                 addProductToDB(product);
+                cont();
             })
         })
 }
@@ -209,3 +213,23 @@ function addProductToDB(product) {
     // logs the actual query being run
     console.log(query.sql);
   }
+
+function cont() {
+    inquirer
+        .prompt(
+            {
+                type: "confirm",
+                message: "Would you like to perform another action?",
+                name: "confirm",
+                default: true
+            }
+        )
+        .then(function (res) {
+            if (res.confirm) {
+                showManagerMenu()
+            } else {
+                console.log("\nPlease come back when you are ready. \n");
+                process.exit();
+            }
+        })
+};

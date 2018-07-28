@@ -80,7 +80,6 @@ function placeOrder(choice) {
             getInventory(id, requestedQuant);
 
         })
-
     })
 }
 
