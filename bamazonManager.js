@@ -43,6 +43,7 @@ function openConnection() {
 
 function showManagerMenu() {
     greetManager();
+    
     var choice = [
         "View Products for Sale",
         "View Low Inventory",
@@ -86,7 +87,6 @@ function greetManager() {
 function showStock() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-
         console.log(divider + "Below is a list of our Inventory:\n");
         console.table(res);
         cont();
@@ -96,7 +96,7 @@ function showStock() {
 
 function lowInventory() {
     var query = connection.query(
-        "SELECT * FROM products WHERE stock_quantity < 55",
+        "SELECT * FROM products WHERE stock_quantity < 5",
         function (err, res) {
             console.table(res);
             cont();
@@ -124,12 +124,12 @@ function updateStock() {
                 if (err) throw err;
                 currStock = res[0].stock_quantity;
                 console.table(res);
-                
+
                 inquirer.prompt([{
                     type: "input",
                     message: "How many many would you like to order?",
                     name: "count"
-               
+
                 }]).then(function (res) {
                     currStock = parseInt(currStock) + parseInt(res.count);
                     UpdateInventory(item, currStock)
@@ -160,13 +160,13 @@ function UpdateInventory(id, aQuant) {
 
 
 
-function createProduct() {    
+function createProduct() {
     var id;
     connection.query("SELECT item_id FROM products ORDER BY item_id DESC LIMIT 1",
         function (err, res) {
             if (err) throw err;
-            id = parseInt(res[0].item_id) + 1;         
-            
+            id = parseInt(res[0].item_id) + 1;
+
             inquirer.prompt([{
                     name: "product",
                     message: "What is the product you wish to create?"
@@ -196,34 +196,31 @@ function createProduct() {
 function addProductToDB(product) {
     console.log("Inserting a new product...\n");
     var query = connection.query(
-      "INSERT INTO products SET ?",
-      {
-        item_id: product.id,
-        product_name: product.name,
-        price: product.price,
-        department_name: product.dept,
-        stock_quantity: product.stock_quantity
-      },
-      function(err, res) {
-        console.log(res.affectedRows + " product inserted!\n");
-  
-      }
+        "INSERT INTO products SET ?", {
+            item_id: product.id,
+            product_name: product.name,
+            price: product.price,
+            department_name: product.dept,
+            stock_quantity: product.stock_quantity
+        },
+        function (err, res) {
+            console.log(res.affectedRows + " product inserted!\n");
+
+        }
     );
 
     // logs the actual query being run
     console.log(query.sql);
-  }
+}
 
 function cont() {
     inquirer
-        .prompt(
-            {
-                type: "confirm",
-                message: "Would you like to perform another action?",
-                name: "confirm",
-                default: true
-            }
-        )
+        .prompt({
+            type: "confirm",
+            message: "Would you like to perform another action?",
+            name: "confirm",
+            default: true
+        })
         .then(function (res) {
             if (res.confirm) {
                 showManagerMenu()

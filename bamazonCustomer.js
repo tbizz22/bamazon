@@ -37,7 +37,7 @@ function showStock() {
         if (err) throw err;
         var iChoices = [];
         console.log("Below is a list of our Inventory:");
-        
+
 
         for (var i = 0; i < res.length; i++) {
             var id = res[i].item_id;
@@ -57,12 +57,12 @@ function showStock() {
 function placeOrder(choice) {
     inquirer.prompt(
         [{
-        type: "list",
-        message: "Which product would you like to purchase?",
-        choices: choice,
-        name: "choice"
-    }]
-).then(function (res) {
+            type: "list",
+            message: "Which product would you like to purchase?",
+            choices: choice,
+            name: "choice"
+        }]
+    ).then(function (res) {
 
         var choice = res.choice.split(" - ", 2);
         var id = choice[0];
@@ -108,9 +108,11 @@ function getPrice(itemID, rQuant) {
             if (err) throw err;
             unitCost = res[0].price;
             var price = unitCost * rQuant;
+            updateProductSales(itemID, price)
             console.log("Thank you for purchasing. Your order total is $" + price + ".");
         }
     );
+
 }
 
 
@@ -118,14 +120,13 @@ function checkOrder(id, rQuant, aQuant) {
     if (aQuant < rQuant) {
         console.log("We're sorry your order can not be completed. Please try again with fewer items in your cart. \nCurrent Stock: " + aQuant);
         console.log(divider);
-        showStock();
+        cont();
     } else {
         aQuant = aQuant - rQuant
         // This can happen async since nothing is getting returned
         UpdateInventory(id, aQuant);
         getPrice(id, rQuant);
-        // reset the experience
-        showStock();
+
     }
 }
 
@@ -145,3 +146,52 @@ function UpdateInventory(id, aQuant) {
         }
     );
 }
+
+
+function updateProductSales(itemID, price) {
+
+    var query = connection.query(
+        "SELECT product_sales FROM products WHERE ?", {
+            item_id: itemID
+        },
+        function (err, res) {
+            if (err) throw err;
+            var currps = parseFloat(res[0].product_sales);
+            ps = parseFloat(currps) + parseFloat(price);
+            var query = connection.query(
+                "UPDATE products SET ? WHERE ?", [{
+                        product_sales: ps
+                    },
+                    {
+                        item_id: itemID
+                    }
+                ],
+                function (err, res) {
+                    if (err) throw err;
+                    // reset the experience
+                    cont();
+                }
+            );
+        })
+
+}
+
+
+function cont() {
+    console.log(divider);
+    inquirer
+        .prompt({
+            type: "confirm",
+            message: "Would you like to perform another action?",
+            name: "confirm",
+            default: true
+        })
+        .then(function (res) {
+            if (res.confirm) {
+                showStock()
+            } else {
+                console.log("\nPlease come back when you are ready. \n");
+                process.exit();
+            }
+        })
+};
